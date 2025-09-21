@@ -2,7 +2,7 @@ name: Deploy Vite to GitHub Pages
 
 on:
   push:
-    branches: [ main ] 
+    branches: [ main ]  
   workflow_dispatch:
 
 permissions:
@@ -37,10 +37,12 @@ jobs:
 
       - name: Build
         run: pnpm run build
+        # Asegúrate de tener en vite.config: base: '/Ecos-AI-Frontend/'
 
-
-      - name: SPA fallback
+      # SPA fallback para BrowserRouter (duplica index.html como 404.html)
+      - name: SPA fallback (copy index.html -> 404.html)
         run: cp dist/index.html dist/404.html
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

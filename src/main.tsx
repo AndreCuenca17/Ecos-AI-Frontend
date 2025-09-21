@@ -10,7 +10,10 @@ const router = createBrowserRouter([
   { path: '/', element: <Login /> },
   { path: '/paciente', element: <Paciente /> },
   { path: '/cuidador', element: <Cuidador /> },
-])
+],
+  {
+    basename: import.meta.env.BASE_URL,
+  })
 
 const qc = new QueryClient()
 
