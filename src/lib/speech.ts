@@ -10,7 +10,6 @@ export async function createSpeechRecognizer(
   tokenEndpoint = import.meta.env.VITE_SPEECH_TOKEN_URL ?? "http://localhost:8000/speech/token",
   language = "es-PE"
 ): Promise<RecognizerBundle> {
-  // 1) pedir token y región al backend
   const r = await fetch(tokenEndpoint)
   const { token, region } = await r.json()
 
