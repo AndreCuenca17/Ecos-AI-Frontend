@@ -1,22 +1,29 @@
-import { useRef, useState } from "react"
+// apps/web/src/pages/Paciente.tsx
+"use client"
+import { useAzureSTT } from "../hooks/useAzureSTT"
 
 export default function Paciente() {
-  const wsRef = useRef<WebSocket | null>(null)
-  const [log, setLog] = useState<string[]>([])
-  const send = () => {
-    if (!wsRef.current) {
-      wsRef.current = new WebSocket(import.meta.env.VITE_WS_URL)
-      wsRef.current.onmessage = (e) => setLog((l) => [...l, e.data])
-      wsRef.current.onopen = () => wsRef.current?.send("hola")
-    } else {
-      wsRef.current.send("ping")
-    }
-  }
+  const { listening, partials, finals, error, start, stop } = useAzureSTT()
+
   return (
     <main className="min-h-dvh p-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Compañero de Voz</h1>
-      <button className="w-full h-14 rounded-2xl bg-blue-600 text-white" onClick={send}>Probar conexión</button>
-      <ul className="mt-4 space-y-1 text-sm">{log.map((l,i)=><li key={i} className="rounded bg-zinc-100 p-2">{l}</li>)}</ul>
+
+      <button
+        className={`w-full h-14 rounded-2xl text-white ${listening ? "bg-red-600" : "bg-blue-600"}`}
+        onClick={listening ? stop : start}
+      >
+        {listening ? "Detener" : "Hablar"}
+      </button>
+
+      {error && <p className="mt-4 text-red-600 text-sm">{error}</p>}
+
+      <section className="mt-4 space-y-2">
+        {partials && <p className="rounded-xl bg-zinc-100 p-3">{partials}</p>}
+        {finals.map((t, i) => (
+          <p key={i} className="rounded-xl bg-zinc-50 border p-3">{t}</p>
+        ))}
+      </section>
     </main>
   )
 }
